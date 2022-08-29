@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_list">
+
+    <fragment
+        android:id="@+id/fragment_list"
+        android:name="com.wenger.natifetask1.ui.fragments.ListFragment"
+        android:label="@string/list_fragment"
+        tools:layout="@layout/fragment_list">
+
+        <action
+            android:id="@+id/go_to_item_fragment"
+            app:destination="@id/fragment_item" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_item"
+        android:name="com.wenger.natifetask1.ui.fragments.ItemFragment"
+        android:label="@string/item_fragment"
+        tools:layout="@layout/fragment_item">
+
+        <argument
+            android:name="item_arg"
+            app:argType="com.wenger.natifetask1.model.Item"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+</navigation>
