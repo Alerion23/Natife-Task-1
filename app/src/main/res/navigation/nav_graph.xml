@@ -26,8 +26,7 @@
         <argument
             android:name="item_arg"
             app:argType="com.wenger.natifetask1.model.Item"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </fragment>
 
 </navigation>

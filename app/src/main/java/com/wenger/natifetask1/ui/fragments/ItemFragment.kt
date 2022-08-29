@@ -1,5 +1,6 @@
 package com.wenger.natifetask1.ui.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,11 +21,15 @@ class ItemFragment : Fragment(R.layout.fragment_item) {
         showItemDetails()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showItemDetails() {
+        val id = getString(R.string.id)
+        val name = getString(R.string.name)
+        val description = getString(R.string.description)
         binding?.apply {
-            itemId.text = args.itemArg?.id.toString()
-            itemName.text = args.itemArg?.name
-            itemDescription.text = args.itemArg?.description
+            itemIdTitle.text = id + " " + args.itemArg?.id.toString()
+            itemNameTitle.text = name + " " + args.itemArg?.name
+            itemDescriptionTitle.text = description + " " + args.itemArg?.description
         }
     }
 

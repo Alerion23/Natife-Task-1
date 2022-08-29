@@ -6,8 +6,9 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.wenger.natifetask1.IOnGifsClickListener
+import com.wenger.natifetask1.OnItemClickListener
 import com.wenger.natifetask1.ItemAdapter
+import com.wenger.natifetask1.ItemList
 import com.wenger.natifetask1.R
 import com.wenger.natifetask1.databinding.FragmentListBinding
 import com.wenger.natifetask1.model.Item
@@ -15,9 +16,11 @@ import com.wenger.natifetask1.model.Item
 class ListFragment : Fragment(R.layout.fragment_list) {
 
     private var binding: FragmentListBinding? = null
-    private var itemAdapter: ItemAdapter? = null
+    private val itemAdapter: ItemAdapter by lazy {
+        ItemAdapter(clickListener)
+    }
 
-    private val clickListener = object : IOnGifsClickListener {
+    private val clickListener = object : OnItemClickListener {
         override fun onItemClick(item: Item) {
             val directions = ListFragmentDirections.goToItemFragment(item)
             findNavController().navigate(directions)
@@ -27,27 +30,13 @@ class ListFragment : Fragment(R.layout.fragment_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentListBinding.bind(view)
-        itemAdapter = ItemAdapter(clickListener)
         setupView()
-        createItemList()
+        showItemList()
     }
 
-    private fun createItemList() {
-        val itemList = arrayListOf<Item>()
-        for (i in 0..19) {
-            val name: String = getRandomString(7)
-            val description: String = getRandomString(20)
-            val item = Item(i, name, description)
-            itemList.add(item)
-        }
-        itemAdapter?.submitList(itemList)
-    }
-
-    private fun getRandomString(length: Int): String {
-        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return (1..length)
-            .map { allowedChars.random() }
-            .joinToString("")
+    private fun showItemList() {
+        val newItemList = ItemList.getList()
+        itemAdapter.submitList(newItemList)
     }
 
     private fun setupView() {

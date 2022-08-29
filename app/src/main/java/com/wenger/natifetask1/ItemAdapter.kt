@@ -7,22 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.wenger.natifetask1.databinding.ItemsListBinding
 import com.wenger.natifetask1.model.Item
 
 class ItemAdapter(
-    private val clickListener: IOnGifsClickListener
+    private val clickListener: OnItemClickListener
 ) : ListAdapter<Item, ItemAdapter.MyViewHolder>(ItemDiffCallBack()) {
-
-    class ItemDiffCallBack : DiffUtil.ItemCallback<Item>() {
-        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return oldItem == newItem
-        }
-
-        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return areItemsTheSame(oldItem, newItem)
-        }
-
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
@@ -35,20 +25,29 @@ class ItemAdapter(
         holder.onBind(getItem(position))
     }
 
+    class ItemDiffCallBack : DiffUtil.ItemCallback<Item>() {
+        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+            return areItemsTheSame(oldItem, newItem)
+        }
+    }
+
     class MyViewHolder(
         itemView: View,
-        private val clickListener: IOnGifsClickListener
+        private val clickListener: OnItemClickListener
     ) : RecyclerView.ViewHolder(itemView) {
 
-        private val name: TextView = itemView.findViewById(R.id.name)
+        val binding = ItemsListBinding.bind(itemView)
 
         fun onBind(currentItem: Item) {
-            name.text = currentItem.name
+            binding.name.text = currentItem.name
             itemView.setOnClickListener {
                 clickListener.onItemClick(currentItem)
             }
         }
-
     }
 
 }
