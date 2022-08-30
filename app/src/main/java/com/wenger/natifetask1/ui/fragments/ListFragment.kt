@@ -21,8 +21,11 @@ class ListFragment : Fragment(R.layout.fragment_list) {
     }
 
     private val clickListener = object : OnItemClickListener {
+
+        val prefs = Prefs(requireContext())
+
         override fun onItemClick(id: Int) {
-            Prefs(requireContext()).setItemId(id)
+            prefs.setItemId(id)
             val directions = ListFragmentDirections.goToItemFragment(id)
             findNavController().navigate(directions)
         }

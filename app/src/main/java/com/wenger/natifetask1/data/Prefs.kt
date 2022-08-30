@@ -1,17 +1,19 @@
 package com.wenger.natifetask1.data
 
 import android.content.Context
+import androidx.core.content.edit
 
-class Prefs(private val context: Context) {
+class Prefs(context: Context) {
+
+    private val prefs = context.getSharedPreferences(SHARED_FILE, Context.MODE_PRIVATE)
 
     fun setItemId(id: Int) {
-        val prefs = context.getSharedPreferences(SHARED_FILE, Context.MODE_PRIVATE).edit()
-        prefs.putInt(ITEM_ID, id)
-        prefs.apply()
+        prefs.edit {
+            putInt(ITEM_ID, id)
+        }
     }
 
     fun getItemId(): Int {
-        val prefs = context.getSharedPreferences(SHARED_FILE, Context.MODE_PRIVATE)
         return prefs.getInt(ITEM_ID, 0)
     }
 
