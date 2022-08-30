@@ -15,10 +15,10 @@ class ItemAdapter(
 ) : ListAdapter<Item, ItemAdapter.MyViewHolder>(ItemDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(
-            R.layout.items_list, parent, false
+        val binding = ItemsListBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
         )
-        return MyViewHolder(itemView, clickListener)
+        return MyViewHolder(clickListener, binding)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -31,21 +31,20 @@ class ItemAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return areItemsTheSame(oldItem, newItem)
+            return oldItem.name == newItem.name && oldItem.description == newItem.description
         }
     }
 
     class MyViewHolder(
-        itemView: View,
-        private val clickListener: OnItemClickListener
-    ) : RecyclerView.ViewHolder(itemView) {
+        private val clickListener: OnItemClickListener,
+        private val binding: ItemsListBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        val binding = ItemsListBinding.bind(itemView)
 
         fun onBind(currentItem: Item) {
             binding.name.text = currentItem.name
             itemView.setOnClickListener {
-                clickListener.onItemClick(currentItem)
+                clickListener.onItemClick(currentItem.id)
             }
         }
     }

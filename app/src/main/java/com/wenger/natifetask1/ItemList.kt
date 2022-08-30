@@ -5,7 +5,6 @@ import com.wenger.natifetask1.model.Item
 object ItemList {
 
     private val itemList = arrayListOf<Item>()
-    private var item: Item? = null
 
     fun createList() {
         for (i in 0..19) {
@@ -21,12 +20,10 @@ object ItemList {
     }
 
     fun getItemById(id: Int): Item? {
-        for (i in 0 until itemList.size) {
-            if (id == i) {
-                item = itemList[i]
-            }
+        val foundItem = itemList.find {
+            it.id == id
         }
-        return item
+        return foundItem
     }
 
     private fun getRandomString(length: Int): String {

@@ -4,6 +4,6 @@ import com.wenger.natifetask1.model.Item
 
 interface OnItemClickListener {
 
-    fun onItemClick(item: Item)
+    fun onItemClick(id: Int)
 
 }
