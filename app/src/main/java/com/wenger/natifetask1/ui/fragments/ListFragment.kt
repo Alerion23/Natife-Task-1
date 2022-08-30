@@ -22,7 +22,9 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
     private val clickListener = object : OnItemClickListener {
 
-        val prefs = Prefs(requireContext())
+        val prefs: Prefs by lazy {
+            Prefs(requireContext())
+        }
 
         override fun onItemClick(id: Int) {
             prefs.setItemId(id)
