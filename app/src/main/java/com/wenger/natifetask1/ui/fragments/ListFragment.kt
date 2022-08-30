@@ -10,8 +10,8 @@ import com.wenger.natifetask1.OnItemClickListener
 import com.wenger.natifetask1.ItemAdapter
 import com.wenger.natifetask1.ItemList
 import com.wenger.natifetask1.R
+import com.wenger.natifetask1.data.Prefs
 import com.wenger.natifetask1.databinding.FragmentListBinding
-import com.wenger.natifetask1.model.Item
 
 class ListFragment : Fragment(R.layout.fragment_list) {
 
@@ -22,6 +22,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
     private val clickListener = object : OnItemClickListener {
         override fun onItemClick(id: Int) {
+            Prefs(requireContext()).setItemId(id)
             val directions = ListFragmentDirections.goToItemFragment(id)
             findNavController().navigate(directions)
         }
