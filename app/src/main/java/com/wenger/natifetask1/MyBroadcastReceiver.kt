@@ -11,13 +11,14 @@ class MyBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.d("NOTIFICATION", "OK")
-        val prefs = Prefs(context!!)
-        val id = prefs.getItemId()
+        val prefs = context?.let { Prefs(it) }
+        val id = prefs?.getItemId()
         val newIntent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra(LAST_ITEM_ID, id)
         }
-        context.startActivity(newIntent)
+        context?.startActivity(newIntent)
+
     }
 
     companion object {

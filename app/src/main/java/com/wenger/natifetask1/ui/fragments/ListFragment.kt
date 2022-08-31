@@ -35,15 +35,6 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         binding = FragmentListBinding.bind(view)
         setupView()
         showItemList()
-        onNotificationClick()
-    }
-
-    private fun onNotificationClick() {
-        val lastItemId = activity?.intent?.getIntExtra(MyBroadcastReceiver.LAST_ITEM_ID, -1)
-        if (lastItemId != null && lastItemId > -1) {
-            val directions = ListFragmentDirections.goToItemFragment(lastItemId)
-            findNavController().navigate(directions)
-        }
     }
 
     private fun showItemList() {

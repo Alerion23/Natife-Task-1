@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.wenger.natifetask1.*
 import com.wenger.natifetask1.databinding.ActivityMainBinding
+import com.wenger.natifetask1.ui.fragments.ListFragmentDirections
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         val serviceIntent = Intent(this, ForegroundService::class.java)
         startService(serviceIntent)
         registerBroadcastReceiver()
+        showLastItem()
     }
 
     private fun registerBroadcastReceiver() {
@@ -35,6 +37,17 @@ class MainActivity : AppCompatActivity() {
     private fun createItemList() {
         if (ItemList.getList().size != 20) {
             ItemList.createList()
+        }
+    }
+
+    private fun showLastItem() {
+        val lastItemId = intent.getIntExtra(MyBroadcastReceiver.LAST_ITEM_ID, -1)
+        val fragment =  supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        if (lastItemId > -1) {
+            val directions = ListFragmentDirections.goToItemFragment(lastItemId)
+            if (fragment != null) {
+                findNavController(fragment).navigate(directions)
+            }
         }
     }
 

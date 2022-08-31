@@ -35,7 +35,7 @@ class ForegroundService : Service() {
             .setContentText(getString(R.string.notification_content_text))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(intent)
-            .setOnlyAlertOnce(true)
+            .setSilent(true)
             .build()
         return notification
     }
