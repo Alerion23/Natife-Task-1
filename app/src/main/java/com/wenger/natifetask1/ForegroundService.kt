@@ -23,9 +23,9 @@ class ForegroundService : Service() {
     private fun createForegroundNotification(): Notification {
         createNotificationChannel()
         val intent: PendingIntent =
-            Intent(this, ForegroundService::class.java)
-                .setAction(MainActivity.NOTIFICATION_ACTION).let { notificationIntent ->
-                    PendingIntent.getActivity(
+            Intent(MainActivity.NOTIFICATION_ACTION)
+                .let { notificationIntent ->
+                    PendingIntent.getBroadcast(
                         this, 0, notificationIntent,
                         PendingIntent.FLAG_IMMUTABLE
                     )
@@ -35,6 +35,7 @@ class ForegroundService : Service() {
             .setContentText(getString(R.string.notification_content_text))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(intent)
+            .setOnlyAlertOnce(true)
             .build()
         return notification
     }

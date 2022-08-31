@@ -28,11 +28,6 @@
         <service
             android:name=".ForegroundService"
             android:exported="true" />
-        <receiver
-            android:name=".MyBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false">
-        </receiver>
     </application>
 
 </manifest>
