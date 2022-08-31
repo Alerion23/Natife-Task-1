@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         }
         supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
             ?.let { findNavController(it) }
-        ItemList.createList()
+        createItemList()
         receiver = MyBroadcastReceiver()
         val serviceIntent = Intent(this, ForegroundService::class.java)
         startService(serviceIntent)
@@ -30,6 +30,12 @@ class MainActivity : AppCompatActivity() {
     private fun registerBroadcastReceiver() {
         val intentFilter = IntentFilter(NOTIFICATION_ACTION)
         registerReceiver(receiver, intentFilter)
+    }
+
+    private fun createItemList() {
+        if (ItemList.getList().size != 20) {
+            ItemList.createList()
+        }
     }
 
     override fun onDestroy() {

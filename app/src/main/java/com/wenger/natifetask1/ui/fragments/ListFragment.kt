@@ -6,10 +6,7 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.wenger.natifetask1.OnItemClickListener
-import com.wenger.natifetask1.ItemAdapter
-import com.wenger.natifetask1.ItemList
-import com.wenger.natifetask1.R
+import com.wenger.natifetask1.*
 import com.wenger.natifetask1.data.Prefs
 import com.wenger.natifetask1.databinding.FragmentListBinding
 
@@ -38,6 +35,15 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         binding = FragmentListBinding.bind(view)
         setupView()
         showItemList()
+        onNotificationClick()
+    }
+
+    private fun onNotificationClick() {
+        val lastItemId = activity?.intent?.getIntExtra(MyBroadcastReceiver.LAST_ITEM_ID, -1)
+        if (lastItemId != null && lastItemId > -1) {
+            val directions = ListFragmentDirections.goToItemFragment(lastItemId)
+            findNavController().navigate(directions)
+        }
     }
 
     private fun showItemList() {

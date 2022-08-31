@@ -14,7 +14,7 @@ class Prefs(context: Context) {
     }
 
     fun getItemId(): Int {
-        return prefs.getInt(ITEM_ID, 0)
+        return prefs.getInt(ITEM_ID, -1)
     }
 
     companion object {
