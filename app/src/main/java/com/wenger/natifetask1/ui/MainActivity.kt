@@ -24,33 +24,23 @@ class MainActivity : AppCompatActivity() {
         receiver = MyBroadcastReceiver()
         val serviceIntent = Intent(this, ForegroundService::class.java)
         startService(serviceIntent)
-    }
-
-        override fun onStart() {
-        super.onStart()
         registerBroadcastReceiver()
     }
 
     private fun registerBroadcastReceiver() {
-        val intentFilter = IntentFilter(BROADCAST_RECEIVER_FILTER)
-        intentFilter.addAction(NOTIFICATION_ACTION)
+        val intentFilter = IntentFilter(NOTIFICATION_ACTION)
         registerReceiver(receiver, intentFilter)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        unregisterReceiver(receiver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         binding = null
+        unregisterReceiver(receiver)
         val serviceIntent = Intent(this, ForegroundService::class.java)
         stopService(serviceIntent)
     }
 
     companion object {
-        private const val BROADCAST_RECEIVER_FILTER = "Broadcast receiver filter"
         const val NOTIFICATION_ACTION = "${BuildConfig.APPLICATION_ID}.CUSTOM_ACTION"
     }
 
