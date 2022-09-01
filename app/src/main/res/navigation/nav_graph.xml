@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_list"
-        android:name="com.wenger.natifetask1.ui.fragments.ListFragment"
+        android:name="com.wenger.natifetask1.ui.fragments.list.ListFragment"
         android:label="@string/list_fragment"
         tools:layout="@layout/fragment_list">
 
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/fragment_item"
-        android:name="com.wenger.natifetask1.ui.fragments.ItemFragment"
+        android:name="com.wenger.natifetask1.ui.fragments.item.ItemFragment"
         android:label="@string/item_fragment"
         tools:layout="@layout/fragment_item">
 

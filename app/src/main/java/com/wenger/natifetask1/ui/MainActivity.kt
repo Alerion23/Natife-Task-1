@@ -7,12 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.wenger.natifetask1.*
 import com.wenger.natifetask1.databinding.ActivityMainBinding
-import com.wenger.natifetask1.ui.fragments.ListFragmentDirections
+import com.wenger.natifetask1.ui.fragments.list.ListFragmentDirections
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainActivityView {
 
     private var binding: ActivityMainBinding? = null
     private var receiver: MyBroadcastReceiver? = null
+    private val presenter: MainActivityPresenter by lazy {
+        MainActivityPresenterImpl(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         }
         supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
             ?.let { findNavController(it) }
-        createItemList()
+        presenter.createList()
         receiver = MyBroadcastReceiver()
         val serviceIntent = Intent(this, ForegroundService::class.java)
         startService(serviceIntent)
@@ -32,12 +35,6 @@ class MainActivity : AppCompatActivity() {
     private fun registerBroadcastReceiver() {
         val intentFilter = IntentFilter(NOTIFICATION_ACTION)
         registerReceiver(receiver, intentFilter)
-    }
-
-    private fun createItemList() {
-        if (ItemList.getList().size != 20) {
-            ItemList.createList()
-        }
     }
 
     private fun showLastItem() {

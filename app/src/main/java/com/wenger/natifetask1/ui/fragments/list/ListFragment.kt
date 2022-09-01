@@ -1,4 +1,4 @@
-package com.wenger.natifetask1.ui.fragments
+package com.wenger.natifetask1.ui.fragments.list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,22 +9,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wenger.natifetask1.*
 import com.wenger.natifetask1.data.Prefs
 import com.wenger.natifetask1.databinding.FragmentListBinding
+import com.wenger.natifetask1.model.Item
 
-class ListFragment : Fragment(R.layout.fragment_list) {
+class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
 
     private var binding: FragmentListBinding? = null
     private val itemAdapter: ItemAdapter by lazy {
         ItemAdapter(clickListener)
     }
+    private val prefs: Prefs by lazy {
+        Prefs(requireContext())
+    }
+    private val presenter: ListPresenter by lazy {
+        ListPresenterImpl(this, prefs)
+    }
 
     private val clickListener = object : OnItemClickListener {
 
-        val prefs: Prefs by lazy {
-            Prefs(requireContext())
-        }
-
         override fun onItemClick(id: Int) {
-            prefs.setItemId(id)
+            presenter.saveItemId(id)
             val directions = ListFragmentDirections.goToItemFragment(id)
             findNavController().navigate(directions)
         }
@@ -34,12 +37,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentListBinding.bind(view)
         setupView()
-        showItemList()
-    }
-
-    private fun showItemList() {
-        val newItemList = ItemList.getList()
-        itemAdapter.submitList(newItemList)
+        presenter.getNewList()
     }
 
     private fun setupView() {
@@ -53,5 +51,9 @@ class ListFragment : Fragment(R.layout.fragment_list) {
     override fun onDestroy() {
         super.onDestroy()
         binding = null
+    }
+
+    override fun showItemList(list: ArrayList<Item>) {
+        itemAdapter.submitList(list)
     }
 }
