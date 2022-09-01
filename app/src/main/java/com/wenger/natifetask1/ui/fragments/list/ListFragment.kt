@@ -1,8 +1,9 @@
-package com.wenger.natifetask1.ui.fragments
+package com.wenger.natifetask1.ui.fragments.list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,15 +17,15 @@ class ListFragment : Fragment(R.layout.fragment_list) {
     private val itemAdapter: ItemAdapter by lazy {
         ItemAdapter(clickListener)
     }
+    private val viewModel: ListViewModel by viewModels {
+        val prefs = Prefs(requireContext())
+        ListViewModelFactory(prefs)
+    }
 
     private val clickListener = object : OnItemClickListener {
 
-        val prefs: Prefs by lazy {
-            Prefs(requireContext())
-        }
-
         override fun onItemClick(id: Int) {
-            prefs.setItemId(id)
+            viewModel.saveItemId(id)
             val directions = ListFragmentDirections.goToItemFragment(id)
             findNavController().navigate(directions)
         }
@@ -34,12 +35,15 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentListBinding.bind(view)
         setupView()
-        showItemList()
+        viewModel.getItemList()
+        observeViewModel()
+
     }
 
-    private fun showItemList() {
-        val newItemList = ItemList.getList()
-        itemAdapter.submitList(newItemList)
+    private fun observeViewModel() {
+        viewModel.itemList.observe(viewLifecycleOwner) {
+            itemAdapter.submitList(it)
+        }
     }
 
     private fun setupView() {
