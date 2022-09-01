@@ -17,10 +17,8 @@ class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
     private val itemAdapter: ItemAdapter by lazy {
         ItemAdapter(clickListener)
     }
-    private val prefs: Prefs by lazy {
-        Prefs(requireContext())
-    }
     private val presenter: ListPresenter by lazy {
+        val prefs = Prefs(requireContext())
         ListPresenterImpl(this, prefs)
     }
 

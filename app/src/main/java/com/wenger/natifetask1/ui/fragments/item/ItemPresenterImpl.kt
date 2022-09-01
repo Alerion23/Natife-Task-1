@@ -5,19 +5,18 @@ import com.wenger.natifetask1.ItemList
 import com.wenger.natifetask1.data.Prefs
 
 class ItemPresenterImpl(
-    _view: ItemView,
-    _prefs: Prefs
+    private val view: ItemView,
+    private val prefs: Prefs
 ) : ItemPresenter {
-
-    private val view: ItemView = _view
-    private val prefs: Prefs = _prefs
 
     override fun getItemDetails(itemId: Int) {
         val item = ItemList.getItemById(itemId)
-        val id = item?.id
-        val name = item?.name
-        val description = item?.description
-        view.showItemDetails(id, name, description)
+        if (item != null) {
+            val id = item.id
+            val name = item.name
+            val description = item.description
+            view.showItemDetails(id, name, description)
+        }
     }
 
     override fun getIdAndLog() {

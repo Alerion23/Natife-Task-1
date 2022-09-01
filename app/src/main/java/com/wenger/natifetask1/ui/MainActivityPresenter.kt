@@ -4,4 +4,6 @@ interface MainActivityPresenter {
 
     fun createList()
 
+    fun checkItemId(id: Int)
+
 }

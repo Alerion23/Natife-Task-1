@@ -12,10 +12,8 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
 
     private var binding: FragmentItemBinding? = null
     private val args: ItemFragmentArgs by navArgs()
-    private val prefs: Prefs by lazy {
-        Prefs(requireContext())
-    }
     private val presenter: ItemPresenter by lazy {
+        val prefs = Prefs(requireContext())
         ItemPresenterImpl(this, prefs)
     }
 
@@ -39,13 +37,11 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
         binding = null
     }
 
-    override fun showItemDetails(id: Int?, name: String?, description: String?) {
-        if (id != null && name != null && description != null) {
-            binding?.apply {
-                itemIdTitle.text = getString(R.string.id, id)
-                itemNameTitle.text = getString(R.string.name, name)
-                itemDescriptionTitle.text = getString(R.string.description, description)
-            }
+    override fun showItemDetails(id: Int, name: String, description: String) {
+        binding?.apply {
+            itemIdTitle.text = getString(R.string.id, id)
+            itemNameTitle.text = getString(R.string.name, name)
+            itemDescriptionTitle.text = getString(R.string.description, description)
         }
     }
 

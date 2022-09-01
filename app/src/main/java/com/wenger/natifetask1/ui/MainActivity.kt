@@ -9,6 +9,7 @@ import com.wenger.natifetask1.*
 import com.wenger.natifetask1.databinding.ActivityMainBinding
 import com.wenger.natifetask1.ui.fragments.list.ListFragmentDirections
 
+
 class MainActivity : AppCompatActivity(), MainActivityView {
 
     private var binding: ActivityMainBinding? = null
@@ -29,7 +30,12 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         val serviceIntent = Intent(this, ForegroundService::class.java)
         startService(serviceIntent)
         registerBroadcastReceiver()
-        showLastItem()
+        getLastItem()
+    }
+
+    private fun getLastItem() {
+        val lastItemId = intent.getIntExtra(MyBroadcastReceiver.LAST_ITEM_ID, -1)
+        presenter.checkItemId(lastItemId)
     }
 
     private fun registerBroadcastReceiver() {
@@ -37,14 +43,11 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         registerReceiver(receiver, intentFilter)
     }
 
-    private fun showLastItem() {
-        val lastItemId = intent.getIntExtra(MyBroadcastReceiver.LAST_ITEM_ID, -1)
-        val fragment =  supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        if (lastItemId > -1) {
-            val directions = ListFragmentDirections.goToItemFragment(lastItemId)
-            if (fragment != null) {
-                findNavController(fragment).navigate(directions)
-            }
+    override fun showLastItem(lastItemId: Int) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        val directions = ListFragmentDirections.goToItemFragment(lastItemId)
+        if (fragment != null) {
+            findNavController(fragment).navigate(directions)
         }
     }
 
