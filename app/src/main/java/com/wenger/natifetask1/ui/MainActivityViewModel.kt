@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.wenger.natifetask1.ItemList
+import com.wenger.natifetask1.utils.SingleLiveEvent
 import com.wenger.natifetask1.utils.ViewState
 
 class MainActivityViewModel : ViewModel() {
 
-    private val _itemIdState = MutableLiveData<ViewState<Int>>()
+    private val _itemIdState = SingleLiveEvent<ViewState<Int>>()
     val itemIdState: LiveData<ViewState<Int>> = _itemIdState
 
     fun createItemList() {
