@@ -9,18 +9,29 @@ class ItemPresenterImpl(
     private val prefs: Prefs
 ) : ItemPresenter {
 
-    override fun getItemDetails(itemId: Int) {
+    private fun getItemDetails(itemId: Int) {
         val item = ItemList.getItemById(itemId)
         if (item != null) {
             val id = item.id
             val name = item.name
             val description = item.description
-            view.showItemDetails(id, name, description)
+            view.render(ItemViewStates.DisplayedItemDetails(id, name, description))
         }
     }
 
-    override fun getIdAndLog() {
+    private fun getIdAndLog() {
         val prefsId = prefs.getItemId()
         Log.i(ItemFragment.TAG, "Id = $prefsId")
+    }
+
+    override fun obtainEvent(event: ItemEvent) {
+        when (event) {
+            is ItemEvent.GetItemDetails -> {
+                getItemDetails(event.itemId)
+            }
+            is ItemEvent.GetItemIdAndLog -> {
+                getIdAndLog()
+            }
+        }
     }
 }

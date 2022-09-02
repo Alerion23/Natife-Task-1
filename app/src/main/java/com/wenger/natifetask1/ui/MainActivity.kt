@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         }
         supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
             ?.let { findNavController(it) }
-        presenter.createList()
+        presenter.obtainEvent(MainEvent.CreateList)
         receiver = MyBroadcastReceiver()
         val serviceIntent = Intent(this, ForegroundService::class.java)
         startService(serviceIntent)
@@ -33,22 +33,26 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         getLastItem()
     }
 
+    override fun render(state: MainViewStates) {
+        when(state) {
+            is MainViewStates.LastItemShowedState -> {
+                val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                val directions = ListFragmentDirections.goToItemFragment(state.lastItemId)
+                if (fragment != null) {
+                    findNavController(fragment).navigate(directions)
+                }
+            }
+        }
+    }
+
     private fun getLastItem() {
         val lastItemId = intent.getIntExtra(MyBroadcastReceiver.LAST_ITEM_ID, -1)
-        presenter.checkItemId(lastItemId)
+        presenter.obtainEvent(MainEvent.CheckItemId(lastItemId))
     }
 
     private fun registerBroadcastReceiver() {
         val intentFilter = IntentFilter(NOTIFICATION_ACTION)
         registerReceiver(receiver, intentFilter)
-    }
-
-    override fun showLastItem(lastItemId: Int) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        val directions = ListFragmentDirections.goToItemFragment(lastItemId)
-        if (fragment != null) {
-            findNavController(fragment).navigate(directions)
-        }
     }
 
     override fun onDestroy() {

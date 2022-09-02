@@ -4,5 +4,5 @@ import com.wenger.natifetask1.model.Item
 
 interface ListFragmentView {
 
-    fun showItemList(list: ArrayList<Item>)
+    fun render(states: ListViewStates)
 }

@@ -25,7 +25,7 @@ class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
     private val clickListener = object : OnItemClickListener {
 
         override fun onItemClick(id: Int) {
-            presenter.saveItemId(id)
+            presenter.obtainEvent(ListEvent.SaveItemId(id))
             val directions = ListFragmentDirections.goToItemFragment(id)
             findNavController().navigate(directions)
         }
@@ -35,7 +35,15 @@ class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentListBinding.bind(view)
         setupView()
-        presenter.getNewList()
+        presenter.obtainEvent(ListEvent.GetList)
+    }
+
+    override fun render(states: ListViewStates) {
+        when (states) {
+            is ListViewStates.DisplayedItemList -> {
+                showItemList(states.list)
+            }
+        }
     }
 
     private fun setupView() {
@@ -51,7 +59,7 @@ class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
         binding = null
     }
 
-    override fun showItemList(list: ArrayList<Item>) {
+    private fun showItemList(list: ArrayList<Item>) {
         itemAdapter.submitList(list)
     }
 }

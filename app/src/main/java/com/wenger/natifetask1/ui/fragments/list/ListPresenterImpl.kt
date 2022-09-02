@@ -8,12 +8,23 @@ class ListPresenterImpl(
     private val prefs: Prefs
 ) : ListPresenter {
 
-    override fun getNewList() {
-        val list = ItemList.getList()
-        view.showItemList(list)
+    override fun obtainEvent(event: ListEvent) {
+        when (event) {
+            is ListEvent.GetList -> {
+                getNewList()
+            }
+            is ListEvent.SaveItemId -> {
+                saveItemId(event.id)
+            }
+        }
     }
 
-    override fun saveItemId(id: Int) {
+    private fun getNewList() {
+        val list = ItemList.getList()
+        view.render(ListViewStates.DisplayedItemList(list))
+    }
+
+    private fun saveItemId(id: Int) {
         prefs.setItemId(id)
     }
 

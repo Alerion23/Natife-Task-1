@@ -24,12 +24,20 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
         getItemDetails()
     }
 
+    override fun render(states: ItemViewStates) {
+        when (states) {
+            is ItemViewStates.DisplayedItemDetails -> {
+                showItemDetails(states.id, states.name, states.description)
+            }
+        }
+    }
+
     private fun getItemDetails() {
-        presenter.getItemDetails(args.itemArg)
+        presenter.obtainEvent(ItemEvent.GetItemDetails(args.itemArg))
     }
 
     private fun logItemId() {
-        presenter.getIdAndLog()
+        presenter.obtainEvent(ItemEvent.GetItemIdAndLog)
     }
 
     override fun onDestroyView() {
@@ -37,7 +45,7 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
         binding = null
     }
 
-    override fun showItemDetails(id: Int, name: String, description: String) {
+    private fun showItemDetails(id: Int, name: String, description: String) {
         binding?.apply {
             itemIdTitle.text = getString(R.string.id, id)
             itemNameTitle.text = getString(R.string.name, name)
