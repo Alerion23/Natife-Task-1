@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.wenger.natifetask1.*
+import com.wenger.natifetask1.data.interactors.CreateItemListImpl
+import com.wenger.natifetask1.data.interactors.CreateItemListInteractor
 import com.wenger.natifetask1.databinding.ActivityMainBinding
 import com.wenger.natifetask1.ui.fragments.list.ListFragmentDirections
 
@@ -15,7 +17,8 @@ class MainActivity : AppCompatActivity(), MainActivityView {
     private var binding: ActivityMainBinding? = null
     private var receiver: MyBroadcastReceiver? = null
     private val presenter: MainActivityPresenter by lazy {
-        MainActivityPresenterImpl(this)
+        val creationList: CreateItemListInteractor = CreateItemListImpl()
+        MainActivityPresenterImpl(this, creationList)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

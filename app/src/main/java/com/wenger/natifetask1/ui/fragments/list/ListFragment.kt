@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wenger.natifetask1.*
 import com.wenger.natifetask1.data.Prefs
+import com.wenger.natifetask1.data.interactors.*
 import com.wenger.natifetask1.databinding.FragmentListBinding
 import com.wenger.natifetask1.model.Item
 
@@ -19,7 +20,9 @@ class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
     }
     private val presenter: ListPresenter by lazy {
         val prefs = Prefs(requireContext())
-        ListPresenterImpl(this, prefs)
+        val saveItemIdInteractor: SaveItemIdInteractor = SaveItemIdImpl(prefs)
+        val getItemListInteractor: GetItemListInteractor = GetItemListImpl()
+        ListPresenterImpl(this, saveItemIdInteractor, getItemListInteractor)
     }
 
     private val clickListener = object : OnItemClickListener {

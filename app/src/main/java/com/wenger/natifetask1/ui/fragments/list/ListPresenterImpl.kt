@@ -1,11 +1,12 @@
 package com.wenger.natifetask1.ui.fragments.list
 
-import com.wenger.natifetask1.ItemList
-import com.wenger.natifetask1.data.Prefs
+import com.wenger.natifetask1.data.interactors.GetItemListInteractor
+import com.wenger.natifetask1.data.interactors.SaveItemIdInteractor
 
 class ListPresenterImpl(
     private val view: ListFragmentView,
-    private val prefs: Prefs
+    private val saveItemIdInteractor: SaveItemIdInteractor,
+    private val getItemListInteractor: GetItemListInteractor
 ) : ListPresenter {
 
     override fun obtainEvent(event: ListEvent) {
@@ -20,12 +21,15 @@ class ListPresenterImpl(
     }
 
     private fun getNewList() {
-        val list = ItemList.getList()
-        view.render(ListViewStates.DisplayedItemList(list))
+        reducer(ListViewStates.DisplayedItemList(list = getItemListInteractor.execute()))
     }
 
     private fun saveItemId(id: Int) {
-        prefs.setItemId(id)
+        saveItemIdInteractor.execute(id)
+    }
+
+    private fun reducer(handler: ListViewStates) {
+        view.render(handler)
     }
 
 }

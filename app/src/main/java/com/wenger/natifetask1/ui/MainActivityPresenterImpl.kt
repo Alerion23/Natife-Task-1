@@ -1,8 +1,10 @@
 package com.wenger.natifetask1.ui
 
-import com.wenger.natifetask1.ItemList
+import com.wenger.natifetask1.data.interactors.CreateItemListInteractor
 
-class MainActivityPresenterImpl(private val view: MainActivityView) : MainActivityPresenter {
+class MainActivityPresenterImpl(
+    private val view: MainActivityView,
+private val creationList: CreateItemListInteractor) : MainActivityPresenter {
 
     override fun obtainEvent(event: MainEvent) {
         when (event) {
@@ -14,18 +16,19 @@ class MainActivityPresenterImpl(private val view: MainActivityView) : MainActivi
                 createList()
             }
         }
-
     }
 
     private fun createList() {
-        if (ItemList.getList().size != 20) {
-            ItemList.createList()
-        }
+        creationList.execute()
     }
 
     private fun checkItemId(id: Int) {
         if (id > -1) {
-            view.render(MainViewStates.LastItemShowedState(id))
+            reduce(MainViewStates.LastItemShowedState(id))
         }
+    }
+
+    private fun reduce(state: MainViewStates) {
+        view.render(state)
     }
 }

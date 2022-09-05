@@ -1,26 +1,27 @@
 package com.wenger.natifetask1.ui.fragments.item
 
 import android.util.Log
-import com.wenger.natifetask1.ItemList
-import com.wenger.natifetask1.data.Prefs
+import com.wenger.natifetask1.data.interactors.GetItemByIdInteractor
+import com.wenger.natifetask1.data.interactors.GetItemIdInteractor
 
 class ItemPresenterImpl(
     private val view: ItemView,
-    private val prefs: Prefs
+    private val getItemId: GetItemIdInteractor,
+    private val getItemById: GetItemByIdInteractor
 ) : ItemPresenter {
 
     private fun getItemDetails(itemId: Int) {
-        val item = ItemList.getItemById(itemId)
+        val item = getItemById.execute(itemId)
         if (item != null) {
             val id = item.id
             val name = item.name
             val description = item.description
-            view.render(ItemViewStates.DisplayedItemDetails(id, name, description))
+            reducer(ItemViewStates.DisplayedItemDetails(id, name, description))
         }
     }
 
     private fun getIdAndLog() {
-        val prefsId = prefs.getItemId()
+        val prefsId = getItemId.execute()
         Log.i(ItemFragment.TAG, "Id = $prefsId")
     }
 
@@ -33,5 +34,9 @@ class ItemPresenterImpl(
                 getIdAndLog()
             }
         }
+    }
+
+    private fun reducer(state: ItemViewStates) {
+        view.render(state)
     }
 }

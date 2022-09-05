@@ -6,6 +6,10 @@ import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.wenger.natifetask1.R
 import com.wenger.natifetask1.data.Prefs
+import com.wenger.natifetask1.data.interactors.GetItemByIdImpl
+import com.wenger.natifetask1.data.interactors.GetItemByIdInteractor
+import com.wenger.natifetask1.data.interactors.GetItemIdImpl
+import com.wenger.natifetask1.data.interactors.GetItemIdInteractor
 import com.wenger.natifetask1.databinding.FragmentItemBinding
 
 class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
@@ -14,7 +18,9 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
     private val args: ItemFragmentArgs by navArgs()
     private val presenter: ItemPresenter by lazy {
         val prefs = Prefs(requireContext())
-        ItemPresenterImpl(this, prefs)
+        val getItemDetails: GetItemByIdInteractor = GetItemByIdImpl()
+        val getItemId: GetItemIdInteractor = GetItemIdImpl(prefs)
+        ItemPresenterImpl(this, getItemId, getItemDetails)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
