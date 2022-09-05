@@ -7,9 +7,7 @@ import androidx.navigation.fragment.navArgs
 import com.wenger.natifetask1.R
 import com.wenger.natifetask1.data.Prefs
 import com.wenger.natifetask1.data.interactors.GetItemByIdImpl
-import com.wenger.natifetask1.data.interactors.GetItemByIdInteractor
 import com.wenger.natifetask1.data.interactors.GetItemIdImpl
-import com.wenger.natifetask1.data.interactors.GetItemIdInteractor
 import com.wenger.natifetask1.databinding.FragmentItemBinding
 
 class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
@@ -18,9 +16,10 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
     private val args: ItemFragmentArgs by navArgs()
     private val presenter: ItemPresenter by lazy {
         val prefs = Prefs(requireContext())
-        val getItemDetails: GetItemByIdInteractor = GetItemByIdImpl()
-        val getItemId: GetItemIdInteractor = GetItemIdImpl(prefs)
-        ItemPresenterImpl(this, getItemId, getItemDetails)
+        val reducer = ItemReducer()
+        val getItemDetails = GetItemByIdImpl()
+        val getItemId = GetItemIdImpl(prefs)
+        ItemPresenterImpl(this, getItemId, getItemDetails, reducer)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,19 +30,22 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
     }
 
     override fun render(states: ItemViewStates) {
-        when (states) {
-            is ItemViewStates.DisplayedItemDetails -> {
-                showItemDetails(states.id, states.name, states.description)
-            }
+        val item = states.item
+        if (item != null) {
+            val id = item.id
+            val name = item.name
+            val description = item.description
+            showItemDetails(id, name, description)
+
         }
     }
 
     private fun getItemDetails() {
-        presenter.obtainEvent(ItemEvent.GetItemDetails(args.itemArg))
+        presenter.getItemDetails(args.itemArg)
     }
 
     private fun logItemId() {
-        presenter.obtainEvent(ItemEvent.GetItemIdAndLog)
+        presenter.getIdAndLog()
     }
 
     override fun onDestroyView() {

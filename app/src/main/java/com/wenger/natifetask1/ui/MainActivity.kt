@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.wenger.natifetask1.*
 import com.wenger.natifetask1.data.interactors.CreateItemListImpl
-import com.wenger.natifetask1.data.interactors.CreateItemListInteractor
 import com.wenger.natifetask1.databinding.ActivityMainBinding
 import com.wenger.natifetask1.ui.fragments.list.ListFragmentDirections
 
@@ -17,8 +16,9 @@ class MainActivity : AppCompatActivity(), MainActivityView {
     private var binding: ActivityMainBinding? = null
     private var receiver: MyBroadcastReceiver? = null
     private val presenter: MainActivityPresenter by lazy {
-        val creationList: CreateItemListInteractor = CreateItemListImpl()
-        MainActivityPresenterImpl(this, creationList)
+        val creationList = CreateItemListImpl()
+        val reducer = MainReducer()
+        MainActivityPresenterImpl(this, reducer, creationList)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         }
         supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
             ?.let { findNavController(it) }
-        presenter.obtainEvent(MainEvent.CreateList)
+        presenter.createList()
         receiver = MyBroadcastReceiver()
         val serviceIntent = Intent(this, ForegroundService::class.java)
         startService(serviceIntent)
@@ -37,20 +37,16 @@ class MainActivity : AppCompatActivity(), MainActivityView {
     }
 
     override fun render(state: MainViewStates) {
-        when(state) {
-            is MainViewStates.LastItemShowedState -> {
                 val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                 val directions = ListFragmentDirections.goToItemFragment(state.lastItemId)
                 if (fragment != null) {
                     findNavController(fragment).navigate(directions)
-                }
-            }
         }
     }
 
     private fun getLastItem() {
         val lastItemId = intent.getIntExtra(MyBroadcastReceiver.LAST_ITEM_ID, -1)
-        presenter.obtainEvent(MainEvent.CheckItemId(lastItemId))
+        presenter.checkItemId(lastItemId)
     }
 
     private fun registerBroadcastReceiver() {

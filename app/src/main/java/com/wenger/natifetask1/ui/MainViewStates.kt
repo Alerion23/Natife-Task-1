@@ -1,6 +1,3 @@
 package com.wenger.natifetask1.ui
 
-sealed class MainViewStates  {
-
-    class  LastItemShowedState(val lastItemId: Int): MainViewStates()
-}
+data class MainViewStates(val lastItemId: Int)

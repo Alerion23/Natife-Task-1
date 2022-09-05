@@ -1,42 +1,41 @@
 package com.wenger.natifetask1.ui.fragments.item
 
-import android.util.Log
-import com.wenger.natifetask1.data.interactors.GetItemByIdInteractor
-import com.wenger.natifetask1.data.interactors.GetItemIdInteractor
+import com.wenger.natifetask1.base.Interactor
+import com.wenger.natifetask1.base.UnitInteractor
 
 class ItemPresenterImpl(
     private val view: ItemView,
-    private val getItemId: GetItemIdInteractor,
-    private val getItemById: GetItemByIdInteractor
+    private val getItemId: UnitInteractor<ItemViewStates, ItemEvent>,
+    private val getItemById: Interactor<ItemViewStates, ItemEvent>,
+    private val reducer: ItemReducer
 ) : ItemPresenter {
 
-    private fun getItemDetails(itemId: Int) {
-        val item = getItemById.execute(itemId)
-        if (item != null) {
-            val id = item.id
-            val name = item.name
-            val description = item.description
-            reducer(ItemViewStates.DisplayedItemDetails(id, name, description))
-        }
+    private val initState = reducer.initState
+
+    override fun getItemDetails(itemId: Int) {
+        obtainEvent(ItemEvent.GetItemDetails(itemId))
     }
 
-    private fun getIdAndLog() {
-        val prefsId = getItemId.execute()
-        Log.i(ItemFragment.TAG, "Id = $prefsId")
+    override fun getIdAndLog() {
+        obtainEvent(ItemEvent.GetItemIdAndLog)
     }
 
-    override fun obtainEvent(event: ItemEvent) {
+    private fun obtainEvent(event: ItemEvent) {
+        val stateValue = reducer.reduce(initState, event)
         when (event) {
             is ItemEvent.GetItemDetails -> {
-                getItemDetails(event.itemId)
+                val result = getItemById.invoke(initState, event)
+                obtainEvent(result)
             }
             is ItemEvent.GetItemIdAndLog -> {
-                getIdAndLog()
+                getItemId.invoke(initState, event)
+            }
+            is ItemEvent.ItemDetailsReceived -> {
+                    view.render(stateValue)
+            }
+            is ItemEvent.Error -> {
+                view.render(stateValue)
             }
         }
-    }
-
-    private fun reducer(state: ItemViewStates) {
-        view.render(state)
     }
 }

@@ -1,7 +1,7 @@
 package com.wenger.natifetask1.ui.fragments.item
 
-sealed class ItemViewStates {
+import com.wenger.natifetask1.model.Item
 
-    class DisplayedItemDetails(val id: Int, val name: String, val description: String) :
-        ItemViewStates()
+data class ItemViewStates(val id: Int, val item: Item?) {
+
 }

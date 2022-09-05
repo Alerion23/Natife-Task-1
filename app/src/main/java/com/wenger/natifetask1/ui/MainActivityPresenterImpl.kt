@@ -1,34 +1,38 @@
 package com.wenger.natifetask1.ui
 
-import com.wenger.natifetask1.data.interactors.CreateItemListInteractor
+import com.wenger.natifetask1.base.UnitInteractor
 
 class MainActivityPresenterImpl(
     private val view: MainActivityView,
-private val creationList: CreateItemListInteractor) : MainActivityPresenter {
+    private val reducer: MainReducer,
+    private val creationList: UnitInteractor<MainViewStates, MainEvent>
+) : MainActivityPresenter {
 
-    override fun obtainEvent(event: MainEvent) {
+    private val initState = reducer.initState
+
+    private fun obtainEvent(event: MainEvent) {
+        val stateValue = reducer.reduce(initState, event)
         when (event) {
             is MainEvent.CheckItemId -> {
-                checkItemId(event.id)
+                if (event.id > -1) {
+                    val result = MainEvent.ItemIdChecked(event.id)
+                    obtainEvent(result)
+                }
             }
-
             is MainEvent.CreateList -> {
-                createList()
+                creationList.invoke(initState, event)
+            }
+            is MainEvent.ItemIdChecked -> {
+                view.render(stateValue)
             }
         }
     }
 
-    private fun createList() {
-        creationList.execute()
+    override fun createList() {
+        obtainEvent(MainEvent.CreateList)
     }
 
-    private fun checkItemId(id: Int) {
-        if (id > -1) {
-            reduce(MainViewStates.LastItemShowedState(id))
-        }
-    }
-
-    private fun reduce(state: MainViewStates) {
-        view.render(state)
+    override fun checkItemId(id: Int) {
+        obtainEvent(MainEvent.CheckItemId(id))
     }
 }

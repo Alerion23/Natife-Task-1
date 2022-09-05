@@ -20,15 +20,16 @@ class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
     }
     private val presenter: ListPresenter by lazy {
         val prefs = Prefs(requireContext())
-        val saveItemIdInteractor: SaveItemIdInteractor = SaveItemIdImpl(prefs)
-        val getItemListInteractor: GetItemListInteractor = GetItemListImpl()
-        ListPresenterImpl(this, saveItemIdInteractor, getItemListInteractor)
+        val reducer = ListReducer()
+        val saveItemIdInteractor = SaveItemIdImpl(prefs)
+        val getItemListInteractor = GetItemListImpl()
+        ListPresenterImpl(this, saveItemIdInteractor, getItemListInteractor, reducer)
     }
 
     private val clickListener = object : OnItemClickListener {
 
         override fun onItemClick(id: Int) {
-            presenter.obtainEvent(ListEvent.SaveItemId(id))
+            presenter.saveItemId(id)
             val directions = ListFragmentDirections.goToItemFragment(id)
             findNavController().navigate(directions)
         }
@@ -38,15 +39,11 @@ class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentListBinding.bind(view)
         setupView()
-        presenter.obtainEvent(ListEvent.GetList)
+        presenter.getNewList()
     }
 
-    override fun render(states: ListViewStates) {
-        when (states) {
-            is ListViewStates.DisplayedItemList -> {
-                showItemList(states.list)
-            }
-        }
+    override fun render(state: ListViewStates) {
+        showItemList(state.list)
     }
 
     private fun setupView() {
