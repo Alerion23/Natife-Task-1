@@ -42,14 +42,14 @@ class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
         presenter.getNewList()
     }
 
-    override fun render(state: ListViewStates) {
+    override fun render(state: ListViewState) {
         showItemList(state.list)
     }
 
     private fun setupView() {
         binding?.apply {
             itemRecycler.layoutManager =
-                LinearLayoutManager(this@ListFragment.context, RecyclerView.VERTICAL, false)
+                LinearLayoutManager(context)
             itemRecycler.adapter = itemAdapter
         }
     }
@@ -59,7 +59,7 @@ class ListFragment : Fragment(R.layout.fragment_list), ListFragmentView {
         binding = null
     }
 
-    private fun showItemList(list: ArrayList<Item>) {
+    private fun showItemList(list: List<Item>) {
         itemAdapter.submitList(list)
     }
 }

@@ -16,7 +16,7 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
     private val args: ItemFragmentArgs by navArgs()
     private val presenter: ItemPresenter by lazy {
         val prefs = Prefs(requireContext())
-        val reducer = ItemReducer()
+        val reducer = ItemReducer(args.itemArg)
         val getItemDetails = GetItemByIdImpl()
         val getItemId = GetItemIdImpl(prefs)
         ItemPresenterImpl(this, getItemId, getItemDetails, reducer)
@@ -29,7 +29,7 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
         getItemDetails()
     }
 
-    override fun render(states: ItemViewStates) {
+    override fun render(states: ItemViewState) {
         val item = states.item
         if (item != null) {
             val id = item.id
@@ -41,7 +41,7 @@ class ItemFragment : Fragment(R.layout.fragment_item), ItemView {
     }
 
     private fun getItemDetails() {
-        presenter.getItemDetails(args.itemArg)
+        presenter.getItemDetails()
     }
 
     private fun logItemId() {

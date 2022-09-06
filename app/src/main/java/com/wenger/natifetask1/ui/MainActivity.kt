@@ -17,7 +17,8 @@ class MainActivity : AppCompatActivity(), MainActivityView {
     private var receiver: MyBroadcastReceiver? = null
     private val presenter: MainActivityPresenter by lazy {
         val creationList = CreateItemListImpl()
-        val reducer = MainReducer()
+        val lastItemId = intent.getIntExtra(MyBroadcastReceiver.LAST_ITEM_ID, -1)
+        val reducer = MainReducer(lastItemId)
         MainActivityPresenterImpl(this, reducer, creationList)
     }
 
@@ -36,17 +37,18 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         getLastItem()
     }
 
-    override fun render(state: MainViewStates) {
-                val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-                val directions = ListFragmentDirections.goToItemFragment(state.lastItemId)
-                if (fragment != null) {
-                    findNavController(fragment).navigate(directions)
+    override fun render(state: MainViewState) {
+        if (state.isIdExist) {
+            val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+            val directions = ListFragmentDirections.goToItemFragment(state.lastItemId)
+            if (fragment != null) {
+                findNavController(fragment).navigate(directions)
+            }
         }
     }
 
     private fun getLastItem() {
-        val lastItemId = intent.getIntExtra(MyBroadcastReceiver.LAST_ITEM_ID, -1)
-        presenter.checkItemId(lastItemId)
+        presenter.checkItemId()
     }
 
     private fun registerBroadcastReceiver() {

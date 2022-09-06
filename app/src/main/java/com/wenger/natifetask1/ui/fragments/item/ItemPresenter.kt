@@ -4,5 +4,5 @@ interface ItemPresenter {
 
     fun getIdAndLog()
 
-    fun getItemDetails(itemId: Int)
+    fun getItemDetails()
 }

@@ -6,6 +6,7 @@ import java.lang.Exception
 sealed class ItemEvent {
 
     object GetItemIdAndLog : ItemEvent()
+    object ItemIdLogged: ItemEvent()
     data class GetItemDetails(val id: Int): ItemEvent()
     data class ItemDetailsReceived(val item: Item?): ItemEvent()
     data class Error(val error: Exception): ItemEvent()

@@ -6,7 +6,8 @@ import java.lang.Exception
 sealed class ListEvent {
 
     object LoadList : ListEvent()
-    data class ListLoaded(val list: ArrayList<Item>): ListEvent()
+    object ItemIdSaved: ListEvent()
+    data class ListLoaded(val list: List<Item>): ListEvent()
     data class SaveItemId(val id: Int) : ListEvent()
     data class Error(val error: Exception): ListEvent()
 }

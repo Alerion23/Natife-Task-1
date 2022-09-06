@@ -1,19 +1,19 @@
 package com.wenger.natifetask1.ui.fragments.item
 
 import com.wenger.natifetask1.base.Interactor
-import com.wenger.natifetask1.base.UnitInteractor
 
 class ItemPresenterImpl(
     private val view: ItemView,
-    private val getItemId: UnitInteractor<ItemViewStates, ItemEvent>,
-    private val getItemById: Interactor<ItemViewStates, ItemEvent>,
+    private val getItemId: Interactor<ItemViewState, ItemEvent>,
+    private val getItemById: Interactor<ItemViewState, ItemEvent>,
     private val reducer: ItemReducer
 ) : ItemPresenter {
 
     private val initState = reducer.initState
+    private var stateValue = initState
 
-    override fun getItemDetails(itemId: Int) {
-        obtainEvent(ItemEvent.GetItemDetails(itemId))
+    override fun getItemDetails() {
+        obtainEvent(ItemEvent.GetItemDetails(initState.id))
     }
 
     override fun getIdAndLog() {
@@ -21,19 +21,24 @@ class ItemPresenterImpl(
     }
 
     private fun obtainEvent(event: ItemEvent) {
-        val stateValue = reducer.reduce(initState, event)
+        stateValue = reducer.reduce(stateValue, event)
         when (event) {
             is ItemEvent.GetItemDetails -> {
                 val result = getItemById.invoke(initState, event)
+                view.render(stateValue)
                 obtainEvent(result)
             }
             is ItemEvent.GetItemIdAndLog -> {
                 getItemId.invoke(initState, event)
+                view.render(stateValue)
             }
             is ItemEvent.ItemDetailsReceived -> {
-                    view.render(stateValue)
+                view.render(stateValue)
             }
             is ItemEvent.Error -> {
+                view.render(stateValue)
+            }
+            is ItemEvent.ItemIdLogged -> {
                 view.render(stateValue)
             }
         }
