@@ -14,24 +14,20 @@ class ListPresenterImpl(
 
     private fun obtainEvent(event: ListEvent) {
         stateValue = reducer.reduce(stateValue, event)
+        view.render(stateValue)
         when (event) {
             is ListEvent.LoadList -> {
                 val result = getItemListInteractor.invoke(stateValue, event)
-                view.render(stateValue)
                 obtainEvent(result)
             }
             is ListEvent.SaveItemId -> {
                 saveItemIdInteractor.invoke(stateValue, event)
-                view.render(stateValue)
             }
             is ListEvent.ListLoaded -> {
-                view.render(stateValue)
             }
             is ListEvent.Error -> {
-                view.render(stateValue)
             }
             is ListEvent.ItemIdSaved -> {
-                view.render(stateValue)
             }
         }
     }

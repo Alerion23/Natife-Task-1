@@ -13,23 +13,20 @@ class MainActivityPresenterImpl(
 
     private fun obtainEvent(event: MainEvent) {
         stateValue = reducer.reduce(stateValue, event)
+        view.render(stateValue)
         when (event) {
             is MainEvent.CheckItemId -> {
                 if (event.id > -1) {
                     val result = MainEvent.ItemIdChecked(event.id, true)
-                    view.render(stateValue)
                     obtainEvent(result)
                 }
             }
             is MainEvent.CreateList -> {
                 creationList.invoke(initState, event)
-                view.render(stateValue)
             }
             is MainEvent.ItemIdChecked -> {
-                view.render(stateValue)
             }
             is MainEvent.ListCreated -> {
-                view.render(stateValue)
             }
         }
     }
